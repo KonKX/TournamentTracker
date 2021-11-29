@@ -8,21 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TrackerUI
+namespace TournamentDashboardForm
 {
-    public partial class TournamentViewerForm : Form
+    public partial class tournamentDashboard : Form
     {
-        public TournamentViewerForm()
+        public tournamentDashboard()
         {
             InitializeComponent();
         }
 
-        private void TournamentViewerForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void teamOneScoreValue_TextChanged(object sender, EventArgs e)
+        private void headerLabel_Click(object sender, EventArgs e)
         {
 
         }
