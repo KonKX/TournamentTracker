@@ -1,4 +1,6 @@
-﻿namespace TrackerUI
+﻿using System;
+
+namespace TrackerUI
 {
     partial class CreatePrizeForm
     {
@@ -55,6 +57,7 @@
             this.createPrizeButton.TabIndex = 43;
             this.createPrizeButton.Text = "Create Prize";
             this.createPrizeButton.UseVisualStyleBackColor = false;
+            this.createPrizeButton.Click += new System.EventHandler(this.createPrizeButton_Click);
             // 
             // orLabel
             // 
@@ -179,6 +182,9 @@
             this.PerformLayout();
 
         }
+
+       
+
 
         #endregion
 
