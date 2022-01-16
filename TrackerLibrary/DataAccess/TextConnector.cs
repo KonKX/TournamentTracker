@@ -9,19 +9,74 @@ namespace TrackerLibrary
 {
     public class TextConnector : IDataConnection
     {
-        //TODO - Wire up the CreatePrize for text files
+        private const string PrizesFile = "PrizeModels.csv";
+        private const string PeopleFile = "PersonModels.csv";
+        private const string TeamFile = "TeamModels.csv";
+
+        public PersonModel CreatePerson(PersonModel model)
+        {
+            //Load the text file and convert the text to List<PersonModel>
+            List<PersonModel> people = PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
+            //Find the ID
+            int currentId = 1;
+            if (people.Count > 0)
+            {
+                currentId = people.OrderByDescending(x => x.Id).First().Id + 1;
+            }
+            model.Id = currentId;
+            //Add the new record with the new ID
+            people.Add(model);
+            //Convert the people to List<string> and save the list<string> to the text file
+            people.SaveToPeopleFile(PeopleFile);
+
+            return model;
+        }
+
         public PrizeModel CreatePrize(PrizeModel model)
         {
-            model.Id = 1;
+            //Load the text file and convert the text to List<PrizeModel>
+            List<PrizeModel> prizes = PrizesFile.FullFilePath().LoadFile().ConvertToPrizeModels();
+            //Find the ID
+            int currentId = 1;
+            if (prizes.Count > 0)
+            {
+                currentId = prizes.OrderByDescending(x => x.Id).First().Id + 1;
+            }
+            model.Id = currentId;
+            //Add the new record with the new ID
+            prizes.Add(model);
+            //Convert the prizes to List<string> and save the list<string> to the text file
+            prizes.SaveToPrizeFile(PrizesFile);
 
             return model;
 
-            //Load the text file
-            //Convert the text to List<PrizeModel>
+        }
+
+        public TeamModel CreateTeam(TeamModel model)
+        {
+            List<TeamModel> teams = TeamFile.FullFilePath().LoadFile().ConvertToTeamModels(PeopleFile);
+
             //Find the ID
-            //Add the new record with the new ID
-            //Convert the prizes to List<string>
-            //Save the list<string> to the text file
+            int currentId = 1;
+            if (teams.Count > 0)
+            {
+                currentId = teams.OrderByDescending(x => x.Id).First().Id + 1;
+            }
+            model.Id = currentId;
+            teams.Add(model);
+            teams.SaveToTeamFile(PrizesFile);
+
+            return model;
+        }
+
+        public List<PersonModel> GetPersonAll()
+        {
+            return PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
+        }
+
+        public List<TeamModel> GetTeamAll()
+        {
+            return TeamFile.FullFilePath().LoadFile().ConvertToTeamModels(PeopleFile);
         }
     }
 }

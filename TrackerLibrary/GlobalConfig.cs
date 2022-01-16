@@ -15,12 +15,10 @@ namespace TrackerLibrary
         {
             if (db == DatabaseType.sql)
             {
-                //TODO - connect to the database
                 Connections = new SqlConnector();
             }
             else if (db == DatabaseType.text)
             {
-                //TODO - create text connection
                 Connections = new TextConnector();
             }
         }
