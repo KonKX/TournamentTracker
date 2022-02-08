@@ -57,6 +57,7 @@ namespace TrackerLibrary
                 con.Execute("dbo.spPrizes_Insert", p , commandType: CommandType.StoredProcedure);
 
                 model.Id = p.Get<int>("@id");
+
                 return model;
             }
         }
@@ -83,6 +84,66 @@ namespace TrackerLibrary
                 }
 
                 return model;
+            }
+        }
+
+        public void CreateTournament(TournamentModel model)
+        {
+            using (IDbConnection con = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString("Tournaments")))
+            {
+                var p = new DynamicParameters();
+                p.Add("@name", model.TournamentName);
+                p.Add("@fee", model.EntryFee);
+                p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                con.Execute("dbo.spTournaments_Insert", p, commandType: CommandType.StoredProcedure);
+
+                model.Id = p.Get<int>("@id");
+
+                foreach (PrizeModel pz in model.Prizes)
+                {
+                    p = new DynamicParameters();
+                    p.Add("@tournamentid", model.Id);
+                    p.Add("@prizeid", pz.Id);
+                    p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                    con.Execute("dbo.spTournamentPrizes_Insert", p, commandType: CommandType.StoredProcedure);
+                }
+
+                foreach (TeamModel tm in model.EnteredTeams)
+                {
+                    p = new DynamicParameters();
+                    p.Add("@tournamentid", model.Id);
+                    p.Add("@teamid",tm.Id);
+                    p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                    con.Execute("dbo.spTournamentEntries_Insert", p, commandType: CommandType.StoredProcedure);
+                }
+
+                // Save tournament rounds
+                foreach (List<MatchupModel> round in model.Rounds)
+                {
+                    foreach (MatchupModel m in round)
+                    {
+                        p = new DynamicParameters();
+                        p.Add("@tournamentid", model.Id);
+                        p.Add("@matchupround", m.MatchupRound);
+                        p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                        con.Execute("dbo.spMatchups_Insert", p, commandType: CommandType.StoredProcedure);
+
+                        m.Id = p.Get<int>("@id");
+
+                        foreach (MatchupEntryModel entry in m.Entries)
+                        {
+                            p = new DynamicParameters();
+                            p.Add("@matchupid", m.Id);
+                            p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                            con.Execute("dbo.spMatchupEntries_Insert", p, commandType: CommandType.StoredProcedure);
+                        }
+                    }
+                }
             }
         }
 
