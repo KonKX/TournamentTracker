@@ -13,6 +13,9 @@ namespace TrackerLibrary
         private const string PeopleFile = "PersonModels.csv";
         private const string TeamFile = "TeamModels.csv";
         private const string TournamentFile = "TournamentModels.csv";
+        private const string MatchupFile = "MatchupModels.csv";
+        private const string MatchupEntryFile = "MatchupEntryModels.csv";
+        
 
         public PersonModel CreatePerson(PersonModel model)
         {
@@ -65,14 +68,17 @@ namespace TrackerLibrary
             }
             model.Id = currentId;
             teams.Add(model);
-            teams.SaveToTeamFile(PrizesFile);
+            teams.SaveToTeamFile(TeamFile);
 
             return model;
         }
 
         public void CreateTournament(TournamentModel model)
         {
-            List<TournamentModel> tournaments = TournamentFile.FullFilePath().LoadFile().ConvertToTournamentModels(TeamFile, PeopleFile, PrizesFile);
+            List<TournamentModel> tournaments = TournamentFile
+                .FullFilePath()
+                .LoadFile()
+                .ConvertToTournamentModels(TeamFile, PeopleFile, PrizesFile);
 
             int currentId = 1;
             if (tournaments.Count > 0)
@@ -80,6 +86,7 @@ namespace TrackerLibrary
                 currentId = tournaments.OrderByDescending(x => x.Id).First().Id + 1;
             }
             model.Id = currentId;
+            model.SaveRoundsToFile(MatchupFile, MatchupEntryFile);
             tournaments.Add(model);
             tournaments.SaveToTournamentFile(TournamentFile);
 
