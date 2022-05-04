@@ -19,7 +19,7 @@ namespace TrackerLibrary
 
         public static IDataConnection? Connections { get; private set; } 
         public static void InitializeConnections(DatabaseType db) 
-        {
+         {
             if (db == DatabaseType.sql)
             {
                 Connections = new SqlConnector();
