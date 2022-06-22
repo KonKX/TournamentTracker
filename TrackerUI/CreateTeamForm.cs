@@ -38,7 +38,7 @@ namespace TrackerUI
                     lastNameValue.Text,
                     emailValue.Text);
 
-                model = GlobalConfig.Connections.CreatePerson(model);
+                GlobalConfig.Connections.CreatePerson(model);
                 selectedTeamMembers.Add(model);
                 WireUpLists();
 

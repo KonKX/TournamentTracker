@@ -53,7 +53,7 @@ namespace TrackerLibrary
 
             foreach (TeamModel team in teams)
             {
-                curr.Entries.Add(new MatchupEntryModel { TeamCompeting = team });
+                curr.Entries.Add(new MatchupEntryModel { TeamCompeting = team, TeamCompetingId = team.Id });
                 if (byes > 0 || curr.Entries.Count > 1)
                 {
                     curr.MatchupRound = 1;
